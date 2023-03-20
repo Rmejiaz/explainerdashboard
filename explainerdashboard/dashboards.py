@@ -2310,7 +2310,7 @@ class ExplainerHub:
                         [
                             html.H1(self.title, className="display-3"),
                             html.Hr(className="my-2"),
-                            html.Img(src = self.img),
+                            html.Img(src = self.img, height="200px"),
                             html.P(self.description, className="lead"),
                         ],
                         fluid=True,
