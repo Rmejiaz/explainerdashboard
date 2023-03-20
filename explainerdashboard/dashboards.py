@@ -1383,6 +1383,7 @@ class ExplainerHub:
         max_dashboards: int = None,
         add_dashboard_route: bool = False,
         add_dashboard_pattern: str = None,
+        img:str = None,
         **kwargs,
     ):
         """
@@ -1543,6 +1544,8 @@ class ExplainerHub:
             if self.users and not self.dbs_open_by_default:
                 self._protect_dashviews(self.index_page)
             self._add_flask_routes(self.app)
+        
+        self.img = img
 
     def remove_dashboard(self, dashboard_name):
         """Remove a dashboard from the hub"""
@@ -2221,6 +2224,7 @@ class ExplainerHub:
         """Returns the front end of ExplainerHub:
 
         - title
+        - img (if any)
         - description
         - links and description for each dashboard
 
@@ -2299,22 +2303,40 @@ class ExplainerHub:
                 card_decks.append(last_row)
             return card_decks
 
-        header = html.Div(
-            [
-                dbc.Container(
-                    [
-                        html.H1(self.title, className="display-3"),
-                        html.Hr(className="my-2"),
-                        html.P(self.description, className="lead"),
-                    ],
-                    fluid=True,
-                    class_name="py-3",
-                )
-            ],
-            className="p-3 bg-light rounded-3",
-            style=dict(marginTop=40),
-        )
-
+        if self.img:
+            header = html.Div(
+                [
+                    dbc.Container(
+                        [
+                            html.H1(self.title, className="display-3"),
+                            html.Hr(className="my-2"),
+                            html.Img(src = self.img),
+                            html.P(self.description, className="lead"),
+                        ],
+                        fluid=True,
+                        class_name="py-3",
+                    )
+                ],
+                className="p-3 bg-light rounded-3",
+                style=dict(marginTop=40),
+            )
+        else:
+            header = html.Div(
+                [
+                    dbc.Container(
+                        [
+                            html.H1(self.title, className="display-3"),
+                            html.Hr(className="my-2"),
+                            html.P(self.description, className="lead"),
+                        ],
+                        fluid=True,
+                        class_name="py-3",
+                    )
+                ],
+                className="p-3 bg-light rounded-3",
+                style=dict(marginTop=40),
+            )
+            
         if self.masonry:
             dashboard_rows = [
                 dbc.Row([dbc.Col([dbc.CardColumns(dashboard_cards(self.dashboards))])])
